@@ -5,7 +5,7 @@ public class MyStorage
 {
     private readonly SemaphoreSlim emptyStorage = new SemaphoreSlim(0);
     private readonly SemaphoreSlim fullStorage;
-    private readonly object mutex = new object();
+    private readonly object accessStorage = new object();
     private readonly Item[] items;
     private int putIndex = 0;
     private int takeIndex = 0;
@@ -25,7 +25,7 @@ public class MyStorage
 
         Console.WriteLine($"Виробник {producerId}: отримав дозвіл на вхід");
 
-        lock (mutex)
+        lock (accessStorage)
         {
             Console.WriteLine($"Виробник {producerId}: зайшов у критичну секцію");
 
@@ -48,7 +48,7 @@ public class MyStorage
         Console.WriteLine($"Споживач {consumerId}: отримав дозвіл на вхід");
 
         Item item;
-        lock (mutex)
+        lock (accessStorage)
         {
             Console.WriteLine($"Споживач {consumerId}: зайшов у критичну секцію");
 
