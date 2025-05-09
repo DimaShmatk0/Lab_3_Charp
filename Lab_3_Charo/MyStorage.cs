@@ -47,13 +47,12 @@ public class MyStorage
         Console.WriteLine($"Споживач {consumerId}: отримав дозвіл на вхід");
 
         Item item;
-        lock (accessStorage)
-        {
-            Console.WriteLine($"Споживач {consumerId}: зайшов у критичну секцію");
+        accessStorage.Wait();
+        Console.WriteLine($"Споживач {consumerId}: зайшов у критичну секцію");
 
-            item = RemoveItem();
-            Console.WriteLine($"Споживач {consumerId}: взяв предмет з id: {item.Id}");
-        }
+        item = RemoveItem();
+        Console.WriteLine($"Споживач {consumerId}: взяв предмет з id: {item.Id}");
+        accessStorage.Release();
 
         fullStorage.Release();
         Console.WriteLine($"Споживач {consumerId}: повідомив про звільнення місця");
