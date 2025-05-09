@@ -5,7 +5,7 @@ public class MyStorage
 {
     private readonly SemaphoreSlim emptyStorage = new SemaphoreSlim(0);
     private readonly SemaphoreSlim fullStorage;
-    private readonly object accessStorage = new object();
+    private readonly SemaphoreSlim accessStorage = new SemaphoreSlim(1);
     private readonly Item[] items;
     private int putIndex = 0;
     private int takeIndex = 0;
@@ -25,14 +25,13 @@ public class MyStorage
 
         Console.WriteLine($"Виробник {producerId}: отримав дозвіл на вхід");
 
-        lock (accessStorage)
-        {
-            Console.WriteLine($"Виробник {producerId}: зайшов у критичну секцію");
+        accessStorage.Wait();
+        Console.WriteLine($"Виробник {producerId}: зайшов у критичну секцію");
 
-            Console.WriteLine($"Виробник {producerId}: кладе продукт {item.Id}");
-            AddItem(item);
-            Console.WriteLine($"Виробник {producerId}: поклав продукт {item.Id}");
-        }
+        Console.WriteLine($"Виробник {producerId}: кладе продукт {item.Id}");
+        AddItem(item);
+        Console.WriteLine($"Виробник {producerId}: поклав продукт {item.Id}");
+        accessStorage.Release();
 
         emptyStorage.Release();
         Console.WriteLine($"Виробник {producerId}: повідомив про новий предмет");
