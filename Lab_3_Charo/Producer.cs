@@ -19,16 +19,9 @@ public class Producer
     {
         for (int i = 0; i < itemCount; i++)
         {
-            try
-            {
-                var item = new Item(id + i);
-                storage.Produce(item, id);
-                Console.WriteLine($"Producer {id} added item: {item.Id}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            var item = new Item(id + i);
+            storage.Produce(item, id);
+            Console.WriteLine($"Producer {id} added item: {item.Id}");
         }
     }
 }
