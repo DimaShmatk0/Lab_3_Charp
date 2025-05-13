@@ -19,14 +19,7 @@ public class Consumer
     {
         for (int i = 0; i < itemCount; i++)
         {
-            try
-            {
-                storage.Consume(id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            storage.Consume(id);
         }
     }
 }
